@@ -10,46 +10,48 @@ angular.module('app.routes', [])
     
   
 
-      .state('menu.home', {
+  .state('menu.home', {
     url: '/home',
     views: {
-      'side-menu21': {
+      'side-menu': {
         templateUrl: 'templates/home.html',
         controller: 'homeCtrl'
       }
     }
   })
 
-  .state('myGeoEvents', {
+  .state('menu.myGeoEvents', {
     url: '/my-geo-events',
-    templateUrl: 'templates/myGeoEvents.html',
-    controller: 'myGeoEventsCtrl'
-  })
-
-  .state('availableGeoEvents', {
-    url: '/available-geo-events',
-    templateUrl: 'templates/availableGeoEvents.html',
-    controller: 'availableGeoEventsCtrl'
-  })
-
-  .state('menu', {
-    url: '/side-menu21',
-    templateUrl: 'templates/menu.html',
-    abstract:true
-  })
-
-  .state('menu.geoEventDetails', {
-    url: '/geo-event-details',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/geoEventDetails.html',
-        controller: 'geoEventDetailsCtrl'
+     views: {
+      'side-menu': {
+        templateUrl: 'templates/myGeoEvents.html',
+        controller: 'myGeoEventsCtrl'
       }
     }
   })
 
-$urlRouterProvider.otherwise('/side-menu21/home')
+  .state('menu.availableGeoEvents', {
+    url: '/available-geo-events',
+     views: {
+      'side-menu': {
+        templateUrl: 'templates/availableGeoEvents.html',
+        controller: 'availableGeoEventsCtrl'
+      }
+    }
+  })
 
-  
+  .state('menu', {
+    url: '/side-menu',
+    templateUrl: 'templates/menu.html',
+    abstract:true
+  })
+
+  .state('geoEventDetails', {
+    url: '/geo-event-details/:eventID',
+    templateUrl: 'templates/geoEventDetails.html',
+    controller: 'geoEventDetailsCtrl'
+  })
+
+$urlRouterProvider.otherwise('/side-menu/home')  
 
 });
