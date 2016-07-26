@@ -1,49 +1,32 @@
 angular.module('app.controllers', [])
   
-.controller('homeCtrl', function($scope) {
-
-})
-   
-.controller('myGeoEventsCtrl', function($scope, localStorageService) {
-	//initialize the tasks scope with empty array
-	$scope.myEvents = [
-	{
+.controller('homeCtrl', function($scope, Events, localStorageService) {
+	//test data
+	Events.addEvent({
 		"name":"Test Event 1",
 		"location":"1234123412341234",
 		"range":"100",
 		start:new Date(),
 		end:new Date()
-	},{
+	});
+	Events.addEvent({
 		"name":"Test Event 2",
 		"location":"1234123412341234",
 		"range":"300",
 		start:new Date(),
 		end:new Date()
+	});
 
-	}];
+	localStorageService.set("myEvents", Events.getList());
 
-	localStorageService.set("myEvents", $scope.myEvents);
-
-
-	$scope.getMyEvents = function(){
-		if (localStorageService.get("myEvents")) {
-            $scope.myEvents = localStorageService.get("myEvents");
-            for(var i = 0; i <$scope.myEvents; i++){
-            	if($scope.myEvents.start){
-            		$scope.myEvents.start = new Date($scope.myEvents.start);
-            	}
-            	if($scope.myEvents.end){
-            		$scope.myEvents.end = new Date($scope.myEvents.end);
-            	}
-            }
-        } else {
-            $scope.myEvents = [];
-        }
-	}
+})
+   
+.controller('myGeoEventsCtrl', function($scope, Events, localStorageService) {
+	$scope.myEvents = Events.getList();
 
 	$scope.deleteEvent = function(index){
-		$scope.tasks.splice(index, 1);
-		localStorageService.set("myEvents", $scope.myEvents);
+		Events.removeEvent(index);
+		localStorageService.set("myEvents", Events.getList());
 	}
 })
    
@@ -51,27 +34,16 @@ angular.module('app.controllers', [])
 
 })
       
-.controller('geoEventDetailsCtrl', function($scope, $stateParams, $state, localStorageService) {
-	console.log($stateParams);
-	var events;
-	if (localStorageService.get("myEvents")) {
-		events = localStorageService.get("myEvents");
-		$scope.event = events[$stateParams.eventID];
-		if($scope.event.start){
-    		$scope.event.start = new Date($scope.event.start);
-    	}
-    	if($scope.event.end){
-    		$scope.event.end = new Date($scope.event.end);
-    	}
-		console.log($scope.event)
-	} else {
-		$scope.event = {};
-	}
+.controller('geoEventDetailsCtrl', function($scope, $stateParams, $state, Events, localStorageService) {
+	//console.log($stateParams.eventID);
+	$scope.event = Events.getEvent($stateParams.eventID);
+	//console.log($scope.event);
 
 	$scope.updateGeoEvent = function (){
-		events[$stateParams.eventID] = $scope.event;
-		localStorageService.set("myEvents", events);
-		console.log($scope.event);
-		$state.go('menu.myGeoEvents') 
+		//Update local bindings
+		Events.updateEvent($scope.event, $stateParams.eventID);
+		//Update Stored bindings
+		localStorageService.set("myEvents", Events.getList());
+		$state.go('menu.myGeoEvents', {}, { reload: true });
 	}
 })

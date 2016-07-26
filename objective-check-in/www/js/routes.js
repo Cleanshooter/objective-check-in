@@ -25,7 +25,8 @@ angular.module('app.routes', [])
      views: {
       'side-menu': {
         templateUrl: 'templates/myGeoEvents.html',
-        controller: 'myGeoEventsCtrl'
+        controller: 'myGeoEventsCtrl',
+        cache: false
       }
     }
   })
